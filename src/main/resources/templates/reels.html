@@ -1,0 +1,1 @@
+<!doctype html><html><head><title>Reels</title><link rel="stylesheet" href="/css/style.css"></head><body><nav><b>InstaClone</b><a href="/home">Home</a><a href="/explore">Search</a><a href="/reels">Reels</a></nav><main><h2>Reels</h2><div class="reels"><div th:each="p:${posts}" class="reel"><img th:src="${p.imageUrl}"><p th:text="${p.caption}"></p></div></div></main></body></html>

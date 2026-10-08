@@ -1,0 +1,30 @@
+services:
+  db:
+    build: ./Docker-db
+    container_name: instaclone-db
+    environment:
+      MYSQL_DATABASE: instaclone
+      MYSQL_USER: instaclone
+      MYSQL_PASSWORD: instaclone
+      MYSQL_ROOT_PASSWORD: root
+    volumes: [mysql_data:/var/lib/mysql]
+    networks: [instaclone-network]
+  app:
+    build:
+      context: .
+      dockerfile: Docker-app/Dockerfile
+    container_name: instaclone-app
+    depends_on: [db]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/instaclone?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: instaclone
+      SPRING_DATASOURCE_PASSWORD: instaclone
+    ports: ["8080:8080"]
+    volumes: [uploads:/app/uploads]
+    networks: [instaclone-network]
+volumes:
+  mysql_data:
+  uploads:
+networks:
+  instaclone-network:
+    driver: bridge

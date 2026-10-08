@@ -1,0 +1,3 @@
+package com.instaclone.model;
+import jakarta.persistence.*; import java.time.LocalDateTime;
+@Entity @Table(name="posts") public class Post { @Id @GeneratedValue(strategy=GenerationType.IDENTITY) Long id; String imageUrl,caption,type="POST"; int likes; LocalDateTime createdAt=LocalDateTime.now(); @ManyToOne User user; public Long getId(){return id;} public String getImageUrl(){return imageUrl;} public void setImageUrl(String x){imageUrl=x;} public String getCaption(){return caption;} public void setCaption(String x){caption=x;} public String getType(){return type;} public void setType(String x){type=x;} public int getLikes(){return likes;} public User getUser(){return user;} public void setUser(User x){user=x;} }

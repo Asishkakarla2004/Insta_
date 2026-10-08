@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: instaclone}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: instaclone}}
+  template:
+    metadata: {labels: {app: instaclone}}
+    spec:
+      containers:
+      - name: instaclone
+        image: instaclone:latest
+        ports: [{containerPort: 8080}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: instaclone}
+spec:
+  selector: {app: instaclone}
+  ports: [{port: 8080, targetPort: 8080}]
+  type: NodePort
