@@ -1,5 +1,6 @@
 services:
   db:
+    image: kakarlaasish13/insta_clone:igdb
     build: ./Docker-db
     environment:
       MYSQL_DATABASE: instaclone
@@ -9,6 +10,7 @@ services:
     volumes: [mysql_data:/var/lib/mysql]
     networks: [instaclone-network]
   app:
+    image: kakarlaasish13/insta_clone:igapp
     build:
       context: .
       dockerfile: Docker-app/Dockerfile
