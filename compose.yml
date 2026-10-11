@@ -27,4 +27,4 @@ volumes:
   uploads:
 networks:
   instaclone-network:
-    driver: bridge
+    driver: overlay
