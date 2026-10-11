@@ -1,7 +1,6 @@
 services:
   db:
     build: ./Docker-db
-    container_name: instaclone-db
     environment:
       MYSQL_DATABASE: instaclone
       MYSQL_USER: instaclone
@@ -13,7 +12,6 @@ services:
     build:
       context: .
       dockerfile: Docker-app/Dockerfile
-    container_name: instaclone-app
     depends_on: [db]
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/instaclone?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
