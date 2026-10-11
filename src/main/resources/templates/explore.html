@@ -1,1 +1,54 @@
-<!doctype html><html><head><title>Explore</title><link rel="stylesheet" href="/css/style.css"></head><body><nav><b>InstaClone</b><a href="/home">Home</a><a href="/explore">Search</a><a href="/reels">Reels</a></nav><main><form class="search"><input name="q" placeholder="Search accounts"><button>Search</button></form><div class="users"><span th:each="u:${results}" th:text="'@'+${u.username}"></span></div><div class="grid"><div th:each="p:${posts}"><img th:src="${p.imageUrl}"></div></div></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore · InstaClone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@1,600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="topbar">
+    <a class="brand" href="/home">insta<span>gram</span></a>
+    <form class="nav-search" action="/explore" method="get"><span aria-hidden="true">⌕</span><input name="q" th:value="${q}" aria-label="Search posts and people" placeholder="Search posts &amp; people"></form>
+    <div class="nav-links"><a class="nav-icon" href="/home" aria-label="Home">⌂</a><a class="nav-icon" href="/reels" aria-label="Reels">▣</a><a class="nav-icon active" href="/explore" aria-label="Explore">⌕</a><a class="nav-avatar" href="/login" aria-label="Your profile">Y</a></div>
+  </nav>
+  <main class="explore-layout">
+    <section class="explore-intro">
+      <p class="eyebrow">A LITTLE INSPIRATION</p>
+      <h1>Explore <em>something new.</em></h1>
+      <p>Find your next favorite moment, creator, or corner of the world.</p>
+      <form class="explore-search" action="/explore" method="get">
+        <span aria-hidden="true">⌕</span><input name="q" th:value="${q}" placeholder="Try “travel”, “coffee”, or a username" aria-label="Search posts and accounts"><button type="submit">Search <span>→</span></button>
+      </form>
+      <div class="topic-row"><span>Popular:</span><a href="/explore?q=travel">#travel</a><a href="/explore?q=design">#design</a><a href="/explore?q=coffee">#coffee</a><a href="/explore?q=weekend">#weekend</a></div>
+    </section>
+    <section class="explore-results">
+      <div class="explore-heading"><div><p class="eyebrow" th:text="${#strings.isEmpty(q) ? 'CURATED FOR YOU' : 'SEARCH RESULTS'}">CURATED FOR YOU</p><h2 th:text="${#strings.isEmpty(q) ? 'Discover the community' : 'Results for “' + q + '”'}">Discover the community</h2></div><span th:if="${!#strings.isEmpty(q)}" class="result-count" th:text="${#lists.size(posts) + ' posts · ' + #lists.size(results) + ' people'}">0 posts · 0 people</span></div>
+      <div class="user-results" th:if="${!#lists.isEmpty(results)}">
+        <a class="user-result" th:each="u:${results}" th:href="@{/home(user=${u.username})}">
+          <span class="avatar avatar-gradient" th:text="${#strings.toUpperCase(#strings.substring(u.username,0,1))}">U</span><span><strong th:text="${u.username}">username</strong><small>Creator on InstaClone</small></span><b>View profile ↗</b>
+        </a>
+      </div>
+      <div class="explore-grid" th:if="${!#lists.isEmpty(posts)}">
+        <a class="explore-tile" th:each="p:${posts}" th:href="@{/home}">
+          <img th:src="${p.imageUrl}" th:alt="${p.caption}">
+          <span class="tile-overlay"><strong th:text="${p.user != null ? p.user.username : 'instagrammer'}">creator</strong><span th:text="${p.caption}">A moment worth keeping</span><small>♡ <span th:text="${p.likes}">0</span></small></span>
+        </a>
+      </div>
+      <div class="empty-results" th:if="${!#strings.isEmpty(q) and #lists.isEmpty(posts) and #lists.isEmpty(results)}">
+        <div class="empty-mark">⌕</div><h3 th:text="${#strings.isEmpty(q) ? 'Your next inspiration is out there.' : 'No matches just yet'}">No matches just yet</h3>
+        <p th:text="${#strings.isEmpty(q) ? 'Search a topic or creator to explore posts from the community.' : 'Try another keyword or creator name.'}">Try another keyword or creator name.</p>
+        <a href="/explore">Explore all posts <span>→</span></a>
+      </div>
+      <div class="explore-grid demo-explore-grid" th:if="${#lists.isEmpty(posts) and #strings.isEmpty(q)}">
+        <a class="explore-tile" href="/explore?q=travel"><img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Sunrise over a misty mountain valley"><span class="tile-overlay"><strong>marcuslee</strong><span>Taking the scenic route.</span><small>♡ 1.2k</small></span></a>
+        <a class="explore-tile" href="/explore?q=coffee"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="A cozy neighborhood coffee shop"><span class="tile-overlay"><strong>sofiamiles</strong><span>My kind of afternoon.</span><small>♡ 846</small></span></a>
+        <a class="explore-tile" href="/explore?q=design"><img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&amp;fit=crop&amp;w=700&amp;q=80" alt="Warm, minimal home interior"><span class="tile-overlay"><strong>lena.rose</strong><span>Little details, big feeling.</span><small>♡ 932</small></span></a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

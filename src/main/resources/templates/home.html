@@ -1,1 +1,110 @@
-<!doctype html><html><head><title>Home</title><link rel="stylesheet" href="/css/style.css"></head><body><nav><b>InstaClone</b><a href="/home">Home</a><a href="/explore">Search</a><a href="/reels">Reels</a><a href="/login">Sign out</a></nav><main><div class="stories"><div class="story">＋<small>Your story</small></div><div class="story">◉<small>friends</small></div><div class="story">◉<small>travel</small></div><div class="story">◉<small>music</small></div></div><div class="create"><h3>Create post</h3><form method="post" action="/post" enctype="multipart/form-data"><input name="username" placeholder="Your username" required><input name="caption" placeholder="Write a caption"><input type="file" name="file"><button>Post</button></form></div><article th:each="p:${posts}" class="post"><div class="head" th:text="${p.user.username}"></div><img th:src="${p.imageUrl}"><div class="body">♡ <span th:text="${p.likes}"></span> likes<p th:text="${p.caption}"></p></div></article></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home · InstaClone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="topbar">
+    <a class="brand" href="/home">insta<span>gram</span></a>
+    <form class="nav-search" action="/explore" method="get">
+      <span aria-hidden="true">⌕</span>
+      <input name="q" aria-label="Search posts and people" placeholder="Search posts & people">
+    </form>
+    <div class="nav-links">
+      <a class="nav-icon active" href="/home" aria-label="Home">⌂</a>
+      <a class="nav-icon" href="/reels" aria-label="Reels">▣</a>
+      <a class="nav-icon" href="/explore" aria-label="Explore">⌕</a>
+      <a class="nav-avatar" th:href="${currentUser != null ? '/home?user=' + currentUser.username : '/login'}" aria-label="Your profile">
+        <img th:if="${currentUser != null and currentUser.profileImage != null}" th:src="${currentUser.profileImage}" alt="">
+        <span th:if="${currentUser == null or currentUser.profileImage == null}" th:text="${currentUser != null ? #strings.toUpperCase(#strings.substring(currentUser.username,0,1)) : 'Y'}">Y</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="layout">
+    <section class="feed-column">
+      <section class="stories-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">YOUR CIRCLE</p><h1>Stories</h1></div>
+          <a href="/explore">See all <span>→</span></a>
+        </div>
+        <div class="stories">
+          <a class="story story-add" href="/login">
+            <span class="story-ring"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""></span>
+            <span class="story-label">Your story</span><i>+</i>
+          </a>
+          <a class="story" href="/explore"><span class="story-ring"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""></span><span class="story-label">marcuslee</span></a>
+          <a class="story" href="/explore"><span class="story-ring"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""></span><span class="story-label">sofiamiles</span></a>
+          <a class="story" href="/explore"><span class="story-ring"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""></span><span class="story-label">noah.w</span></a>
+          <a class="story" href="/explore"><span class="story-ring"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""></span><span class="story-label">lena.rose</span></a>
+          <a class="story" href="/explore"><span class="story-ring"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""></span><span class="story-label">theo.jpg</span></a>
+        </div>
+      </section>
+
+      <section class="composer">
+        <div class="composer-title"><div class="composer-mark">✦</div><div><h2>Share a moment</h2><p>A little update goes a long way.</p></div></div>
+        <form method="post" action="/post" enctype="multipart/form-data">
+          <input th:if="${currentUser != null}" type="hidden" name="username" th:value="${currentUser.username}">
+          <input th:if="${currentUser == null}" name="username" placeholder="Your username" aria-label="Your username" required>
+          <input name="caption" placeholder="What’s happening?" aria-label="Write a caption">
+          <label class="upload-button" for="post-image">＋ Add photo</label>
+          <input id="post-image" class="file-input" type="file" name="file" accept="image/*">
+          <button class="share-button" type="submit">Share post <span>↗</span></button>
+        </form>
+      </section>
+
+      <div class="feed-title"><div><p class="eyebrow">FRESH FROM YOUR PEOPLE</p><h2>Your feed</h2></div><span class="feed-filter">Latest <b>⌄</b></span></div>
+
+      <article th:each="p:${posts}" class="post-card">
+        <header class="post-header">
+          <div class="avatar avatar-gradient" th:text="${p.user != null ? #strings.toUpperCase(#strings.substring(p.user.username,0,1)) : 'I'}">I</div>
+          <div class="post-author"><strong th:text="${p.user != null ? p.user.username : 'instagrammer'}">instagrammer</strong><span>Shared a moment</span></div>
+          <button class="more-button" type="button" aria-label="More post options">•••</button>
+        </header>
+        <img class="post-image" th:src="${p.imageUrl}" alt="Post photograph">
+        <div class="post-content">
+          <div class="post-actions"><span class="action-heart">♡</span><span class="action-comment">○</span><span class="action-share">↗</span><span class="action-save">♧</span></div>
+          <strong class="likes-count"><span th:text="${p.likes}">0</span> appreciations</strong>
+          <p class="caption"><strong th:text="${p.user != null ? p.user.username : 'instagrammer'}">instagrammer</strong> <span th:text="${p.caption}"></span></p>
+          <a class="comment-link" href="/login">View the conversation</a>
+        </div>
+      </article>
+
+      <section class="post-card demo-card" th:if="${#lists.isEmpty(posts)}">
+        <header class="post-header">
+          <img class="avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt="">
+          <div class="post-author"><strong>marcuslee</strong><span>Brooklyn, New York</span></div><button class="more-button" type="button" aria-label="More post options">•••</button>
+        </header>
+        <img class="post-image" src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Golden morning light over a mountain landscape">
+        <div class="post-content"><div class="post-actions"><span class="action-heart">♡</span><span class="action-comment">○</span><span class="action-share">↗</span><span class="action-save">♧</span></div><strong class="likes-count">1,284 appreciations</strong><p class="caption"><strong>marcuslee</strong> Slow mornings, long trails, and nowhere else to be. ☀</p><a class="comment-link" href="/explore">Be the first to join the conversation</a></div>
+      </section>
+    </section>
+
+    <aside class="sidebar">
+      <section class="profile-card">
+        <div class="profile-cover"></div>
+        <div class="profile-body">
+          <div class="profile-avatar" th:text="${currentUser != null ? #strings.toUpperCase(#strings.substring(currentUser.username,0,1)) : 'Y'}">Y</div>
+          <strong th:text="${currentUser != null ? currentUser.username : 'your.profile'}">your.profile</strong>
+          <span th:text="${currentUser != null and currentUser.fullName != null ? currentUser.fullName : 'Make this space yours'}">Make this space yours</span>
+          <div class="profile-stats"><span><b>12</b> posts</span><span><b>248</b> followers</span><span><b>186</b> following</span></div>
+          <a class="profile-link" th:href="${currentUser != null ? '/home?user=' + currentUser.username : '/login'}">View profile <span>→</span></a>
+        </div>
+      </section>
+      <section class="suggestions">
+        <div class="sidebar-heading"><h3>People to know</h3><a href="/explore">See all</a></div>
+        <div class="suggestion"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""><div><strong>sofiamiles</strong><span>Suggested for you</span></div><a href="/explore">Follow</a></div>
+        <div class="suggestion"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""><div><strong>noah.w</strong><span>New to InstaClone</span></div><a href="/explore">Follow</a></div>
+        <div class="suggestion"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" alt=""><div><strong>lena.rose</strong><span>Followed by sofiamiles</span></div><a href="/explore">Follow</a></div>
+      </section>
+      <footer class="site-footer"><a href="/explore">About</a><a href="/explore">Help</a><a href="/explore">Privacy</a><a href="/explore">Terms</a><span>© 2026 INSTACLONE</span></footer>
+    </aside>
+  </main>
+</body>
+</html>
