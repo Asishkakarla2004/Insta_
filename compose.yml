@@ -1,6 +1,6 @@
 services:
   db:
-    image: kakarlaasish13/insta_clone:igdb
+    image: kakarlaasish13/insta_clone:igdb  #change image change when new image is created
     build: ./Docker-db
     environment:
       MYSQL_DATABASE: instaclone
@@ -10,7 +10,7 @@ services:
     volumes: [mysql_data:/var/lib/mysql]
     networks: [instaclone-network]
   app:
-    image: kakarlaasish13/insta_clone:igapp
+    image: kakarlaasish13/insta_clone:igapp   #change image change when new image is created
     build:
       context: .
       dockerfile: Docker-app/Dockerfile
